@@ -1,0 +1,7 @@
+H:\IN510 Programming 1\1Assessement\Millionaire\millionaireAssessment\millionaireAssessment\obj\Debug\millionaireAssessment.csprojAssemblyReference.cache
+H:\IN510 Programming 1\1Assessement\Millionaire\millionaireAssessment\millionaireAssessment\obj\Debug\millionaireAssessment.csproj.CoreCompileInputs.cache
+H:\IN510 Programming 1\1Assessement\Millionaire\millionaireAssessment\millionaireAssessment\bin\Debug\millionaireAssessment.exe.config
+H:\IN510 Programming 1\1Assessement\Millionaire\millionaireAssessment\millionaireAssessment\bin\Debug\millionaireAssessment.exe
+H:\IN510 Programming 1\1Assessement\Millionaire\millionaireAssessment\millionaireAssessment\bin\Debug\millionaireAssessment.pdb
+H:\IN510 Programming 1\1Assessement\Millionaire\millionaireAssessment\millionaireAssessment\obj\Debug\millionaireAssessment.exe
+H:\IN510 Programming 1\1Assessement\Millionaire\millionaireAssessment\millionaireAssessment\obj\Debug\millionaireAssessment.pdb
