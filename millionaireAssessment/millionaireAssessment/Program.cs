@@ -97,12 +97,12 @@ namespace millionaireAssessment
                     array[temp - 1].interest = Console.ReadLine(); //enters input into interst feild of selected student
                     Console.WriteLine("Change successful");
                 }
-                else
+                else //if temp is larger than the array length
                 {
                     Console.WriteLine("Invalid Number");
                     Console.WriteLine("Change unsuccessful");
                 }
-                Console.Write("Do you want to change another interest feild? (y, n): ");
+                Console.Write("Do you want to change another interest feild? (y, n): "); //checks whether to remain in the for loop or not
                 if (Console.ReadLine().Contains('n'))
                 {
                     exit = true;
@@ -113,16 +113,25 @@ namespace millionaireAssessment
         //Generates 10 finalists
         static void Method3(Student[] array, Student[] finalists)
         {
+            Student temp;
             Random rand = new Random();
-
+            Console.Clear();
             for(int i = 0; i < finalists.Length; i++)
             {
-                finalists[i] = array[rand.Next(30)];
+                temp = array[rand.Next(30)];
+                for (int a = 0; a < finalists.Length; a++)
+                {
+                    if (temp.lName.CompareTo(array[a].lName) == 1)
+                    {
+                        i = i - 1;
+                    }
+                }
             }
 
+            Console.WriteLine("First Name".PadRight(15) + "Last Name".PadRight(30) + "Interest".PadRight(15));
             foreach (Student i in finalists)
             {
-                Console.WriteLine(i.fName + i.lName + i.interest);
+                Console.WriteLine(i.fName.PadRight(15) + i.lName.PadRight(30) + i.interest.PadRight(15));
             }
         }
 
