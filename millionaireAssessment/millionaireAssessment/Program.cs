@@ -51,6 +51,7 @@ namespace millionaireAssessment
                 questionList[count].fAnswer1 = sr1.ReadLine();
                 questionList[count].fAnswer2 = sr1.ReadLine();
                 questionList[count].fAnswer3 = sr1.ReadLine();
+                count++;
             }
             sr1.Close();
             while (!exit) //Menu System
@@ -187,14 +188,16 @@ namespace millionaireAssessment
             Console.WriteLine("\nPress enter to return to menu");
         }
 
-        static void Method5(Question[] array, Student player)
+        static void Method5(Question[] qArray, Student player)
         {
             int[] prizes = {100, 200, 300, 500, 1000, 2000, 4000, 8000, 16000, 32000, 64000, 125000, 250000, 500000, 1000000};
-            int count = 0, pos = 0;
-            bool exit = false;
+            int[] qShuffle = new int[4];
+            int[] numArray = { 0, 0, 0, 0 };
+            int count = 0, pos = 0, temp = 0;
+            bool exit = false, repeat = true;
             // do
             // {
-                Question question = new Question();
+                int question;
                 Random rand = new Random();
                 foreach (int i in prizes)
                 {
@@ -214,8 +217,42 @@ namespace millionaireAssessment
                 }
 
                 Console.WriteLine("You are playing as " + player.fName + " " + player.lName);
-                question = array[rand.Next(10)];
-                Console.WriteLine(question.q);
+                question = rand.Next(0, 9);
+                Console.WriteLine(qArray[question].q);
+            count = 0;
+
+            while (count < 4)
+            {
+                temp = rand.Next(4);
+
+                while(numArray[temp] != 0)
+                {
+                    temp = rand.Next(4);
+                }
+
+                numArray[temp] = count+1;
+                count++;
+            }
+
+            foreach (int i in numArray)
+            {
+                switch (temp)
+                {
+                    case 1:
+                        Console.WriteLine(qArray[question].tAnswer);
+                        break;
+                    case 2:
+                        Console.WriteLine(qArray[question].fAnswer1);
+                        break;
+                    case 3:
+                        Console.WriteLine(qArray[question].fAnswer2);
+                        break;
+                    case 4:
+                        Console.WriteLine(qArray[question].fAnswer3);
+                        break;
+                }
+            }
+
             // } while (!exit);
         }
     }
