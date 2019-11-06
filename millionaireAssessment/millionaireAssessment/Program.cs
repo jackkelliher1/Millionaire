@@ -21,6 +21,7 @@ namespace millionaireAssessment
         public string fAnswer1;
         public string fAnswer2;
         public string fAnswer3;
+        public int used = 0;
     }
     class Program
     {
@@ -193,7 +194,7 @@ namespace millionaireAssessment
             int[] prizes = {100, 200, 300, 500, 1000, 2000, 4000, 8000, 16000, 32000, 64000, 125000, 250000, 500000, 1000000};
             int[] qShuffle = new int[4];
             int[] numArray = { 0, 0, 0, 0 };
-            int count = 0, pos = 0, temp = 0;
+            int count = 0, pos = 0, temp = 0, countRepeat = 0;
             bool exit = false, repeat = true;
             // do
             // {
@@ -218,25 +219,37 @@ namespace millionaireAssessment
 
                 Console.WriteLine("You are playing as " + player.fName + " " + player.lName);
                 question = rand.Next(0, 9);
-                Console.WriteLine(qArray[question].q);
-            count = 0;
-
-            while (count < 4)
+            while (qArray[question].used == 0)
             {
-                temp = rand.Next(4);
 
-                while(numArray[temp] != 0)
+            }
+                Console.WriteLine(qArray[question].q);
+
+
+            for(int i = 0; i < numArray.Length; i++) //Randomly shuffles questions and checks for repeats in answers. {
+            {
+                countRepeat = 0;
+                temp = rand.Next(4);
+                foreach(int a in numArray)
                 {
-                    temp = rand.Next(4);
+                    if (temp + 1 == a)
+                    {
+                        countRepeat++;
+                    }
                 }
 
-                numArray[temp] = count+1;
-                count++;
-            }
+                if (countRepeat > 0)
+                {
+                    i--;
+                } else
+                {
+                    numArray[i] = temp+1;
+                }
+            }                                                                                                       // }
 
             foreach (int i in numArray)
             {
-                switch (temp)
+                switch (i)
                 {
                     case 1:
                         Console.WriteLine(qArray[question].tAnswer);
