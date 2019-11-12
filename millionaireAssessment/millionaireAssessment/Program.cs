@@ -21,7 +21,7 @@ namespace millionaireAssessment
         public string fAnswer1;
         public string fAnswer2;
         public string fAnswer3;
-        public int used = 0;
+        public int used;
     }
     class Program
     {
@@ -52,6 +52,7 @@ namespace millionaireAssessment
                 questionList[count].fAnswer1 = sr1.ReadLine();
                 questionList[count].fAnswer2 = sr1.ReadLine();
                 questionList[count].fAnswer3 = sr1.ReadLine();
+                questionList[count].used = 0;
                 count++;
             }
             sr1.Close();
@@ -87,7 +88,7 @@ namespace millionaireAssessment
             }
         }
 
-        //Lists all contestants sorted by last name
+        //Lists all contestants sorted by last name. Complete
         public static void Method1(Student[] array)
         {
             int count = 1; //numbers each student
@@ -116,26 +117,46 @@ namespace millionaireAssessment
             }
         }
 
-        //Update a students interest feild.
+        //Update a students interest feild. Complete
         static void Method2(Student[] array)
         {
-            bool exit = false;
+            bool exit = false, number = true;
             int temp;
+            string chkString;
             while (!exit) //repeats the loop until the user wants to return to menu
             {
+                number = true;
                 Method1(array); //Lists all students
                 Console.Write("Enter the Number of the student you want to update: ");
-                temp = Convert.ToInt32(Console.ReadLine()); //converts string input into integer
-                if (temp <= array.Length) //Makes sure temp is not greater than the student array
+                chkString = Console.ReadLine(); //holds the input value in order to check validity
+                foreach(char i in chkString) //goes through each char and confirms it is a valid integer
                 {
-                    Console.Write($"Enter {array[temp - 1].fName}'s new interest: "); //Finds the name for the selected number
-                    array[temp - 1].interest = Console.ReadLine(); //enters input into interst feild of selected student
-                    Console.WriteLine("Change successful");
+                    if (i > '0' && i <= '9' && number == true) //if i is larger than 0 and smaller than/equal to 9 it is a valid integer
+                    {
+                        number = true;
+                    } else
+                    {
+                        number = false;
+                    }
                 }
-                else //if temp is larger than the array length
+                if (number == true) //if the foreach loop validated the string as a number
+                {
+                    temp = Convert.ToInt32(chkString); //converts string input into integer
+                    if (temp <= array.Length) //Makes sure temp is not greater than the student array
+                    {
+                        Console.Write($"Enter {array[temp - 1].fName}'s new interest: "); //Finds the name for the selected number
+                        array[temp - 1].interest = Console.ReadLine(); //enters input into interst feild of selected student
+                        Console.WriteLine("Change successful");
+                    }
+                    else //if temp is larger than the array length
+                    {
+                        Console.WriteLine("Invalid Number");
+                        Console.WriteLine("Change unsuccessful");
+                    }
+                } else //if the string was not validated as an integer
                 {
                     Console.WriteLine("Invalid Number");
-                    Console.WriteLine("Change unsuccessful");
+                    Console.WriteLine("Change Unsuccessful");
                 }
                 Console.Write("Do you want to change another interest feild? (y, n): "); //checks whether to remain in the for loop or not
                 if (Console.ReadLine().Contains('n'))
@@ -186,7 +207,7 @@ namespace millionaireAssessment
             Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine(player.fName + " " + player.lName + " was selected as the player.");
             Console.ForegroundColor = ConsoleColor.White;
-            Console.WriteLine("\nPress enter to return to menu");
+            Console.WriteLine("\nPress ENTER to return to menu");
         }
 
         static void Method5(Question[] qArray, Student player)
