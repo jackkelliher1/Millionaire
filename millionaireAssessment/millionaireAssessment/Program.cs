@@ -31,10 +31,11 @@ namespace millionaireAssessment
         {
             bool exit = false;
             int count = 0, num, money; //keeps track of studentArray pos
+            string numString;
             Student player = new Student(); //saves the player data
             Student[] studentArray = new Student[30]; //All students stored
             Student[] finalists = new Student[10]; //10 Finalist students stored
-            Question[] questionList = new Question[10]; //Questions Stored
+            Question[] questionList = new Question[32]; //Questions Stored
             StreamReader sr = new StreamReader(@"millionaire.txt"); //Reads from file
             while (!sr.EndOfStream) //Fills Array
             {
@@ -61,30 +62,35 @@ namespace millionaireAssessment
             {
                 Console.Clear();
                 Console.Write("Who Wants to Be a Millionaire\n\t1.Contestants\n\t2.Update Interests\n\t3.Generate Finalists\n\t4.Select Player\n\t5.Play\n\nEnter the relevent number:");
-                num = Convert.ToInt32(Console.ReadLine());
-                if (num < 6 && num > 0)
+                numString = Console.ReadLine();
+                foreach (char i in numString)
                 {
-                    switch (num)
+                    if (i > '0' && i < '6')
                     {
-                        case 1:
-                            Method1(studentArray);
-                            Console.ReadLine();
-                            break;
-                        case 2:
-                            Method2(studentArray);
-                            break;
-                        case 3:
-                            Method3(studentArray, finalists);
-                            Console.ReadLine();
-                            break;
-                        case 4:
-                            Method4(finalists, ref player);
-                            Console.ReadLine();
-                            break;
-                        case 5:
-                            Method5(questionList, player);
-                            Console.ReadLine();
-                            break;
+                        num = Convert.ToInt32(numString);
+
+
+                        switch (num)
+                        {
+                            case 1:
+                                Method1(studentArray);
+                                Console.ReadLine();
+                                break;
+                            case 2:
+                                Method2(studentArray);
+                                break;
+                            case 3:
+                                Method3(studentArray, finalists);
+                                Console.ReadLine();
+                                break;
+                            case 4:
+                                Method4(finalists, ref player);
+                                Console.ReadLine();
+                                break;
+                            case 5:
+                                Method5(questionList, player);
+                                break;
+                        }
                     }
                 }
             }
@@ -127,7 +133,7 @@ namespace millionaireAssessment
             string chkString;
             while (!exit) //repeats the loop until the user wants to return to menu
             {
-                number = true;
+                number = false;
                 Method1(array); //Lists all students
                 Console.Write("Enter the Number of the student you want to update: ");
                 chkString = Console.ReadLine(); //holds the input value in order to check validity
@@ -324,20 +330,18 @@ namespace millionaireAssessment
                 }
                 guessNum = Convert.ToInt32(guess);
 
+                Thread.Sleep(2000);
                 if (correctNum == guessNum)
                 {
-                    Thread.Sleep(2000);
                     Console.WriteLine("\nCorrect!");
                     pos++;
-                    Thread.Sleep(2000);
                 }
                 else
                 {
-                    Thread.Sleep(2000);
                     Console.WriteLine("\nIncorrect!");
                     exit = true;
-                    Thread.Sleep(2000);
                 }
+                Thread.Sleep(2000);
             } while (!exit);
         }
     }
