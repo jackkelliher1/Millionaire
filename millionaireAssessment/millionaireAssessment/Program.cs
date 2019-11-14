@@ -29,7 +29,7 @@ namespace millionaireAssessment
         //Main Method, creates student array and menu
         static void Main(string[] args)
         {
-            bool exit = false;
+            bool exit = false, finalistsGen = false, playerGen = false;
             int count = 0, num, money; //keeps track of studentArray pos
             string numString;
             Student player = new Student(); //saves the player data
@@ -80,15 +80,15 @@ namespace millionaireAssessment
                                 Method2(studentArray);
                                 break;
                             case 3:
-                                Method3(studentArray, finalists);
+                                Method3(studentArray, finalists, ref finalistsGen);
                                 Console.ReadLine();
                                 break;
                             case 4:
-                                Method4(finalists, ref player);
+                                Method4(finalists, ref player, ref finalistsGen, ref playerGen);
                                 Console.ReadLine();
                                 break;
                             case 5:
-                                Method5(questionList, player);
+                                Method5(questionList, player, ref playerGen);
                                 break;
                         }
                     }
@@ -177,7 +177,7 @@ namespace millionaireAssessment
         }
 
         //Generates 10 finalists
-        static void Method3(Student[] array, Student[] finalists)
+        static void Method3(Student[] array, Student[] finalists, ref bool finalistsGen)
         {
             bool repeat = false; //Variable for the status of a repeating Student
             Student temp; //Temporary variable for storing student
@@ -206,143 +206,197 @@ namespace millionaireAssessment
 
                 repeat = false; //sets repeat back to false
             }
-
+            finalistsGen = true;
             Method1(finalists); //Uses method1 to write the 10 finalists to screen.
         }
 
-        static void Method4(Student[] finalists, ref Student player) //Randomly select a student to be the player
+        static void Method4(Student[] finalists, ref Student player, ref bool finalistsGen, ref bool playerGen) //Randomly select a student to be the player
         {
-            Random rand = new Random();
-            player = finalists[rand.Next(10)];
-            Console.Clear();
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine(player.fName + " " + player.lName + " was selected as the player.");
-            Console.ForegroundColor = ConsoleColor.White;
-            Console.WriteLine("\nPress ENTER to return to menu");
+            if (finalistsGen)
+            {
+                playerGen = true;
+                Random rand = new Random();
+                player = finalists[rand.Next(10)];
+                Console.Clear();
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine(player.fName + " " + player.lName + " was selected as the player.");
+                Console.ForegroundColor = ConsoleColor.White;
+                Console.WriteLine("\nPress ENTER to return to menu");
+            } else
+            {
+                Console.Clear();
+                Console.Write("Please generate finalists before you select a player.\n\nPress Enter to return to the Menu.\n\n> ");
+            }
         }
 
-        static void Method5(Question[] qArray, Student player)
+        static void Method5(Question[] qArray, Student player, ref bool playerGen)
         {
             int[] prizes = { 100, 200, 300, 500, 1000, 2000, 4000, 8000, 16000, 32000, 64000, 125000, 250000, 500000, 1000000 }; //amount of winnings per question
             int[] qShuffle = new int[4]; //shuffles all questions
             int[] numArray = { 0, 0, 0, 0 };
-            int count = 0, pos = 0, temp = 0, countRepeat = 0, question, guessNum, correctNum = 0;
-            bool exit = false, number = true;
+            string[] lifeLines = { "50/50", "Ask the Audience", "Phone a Freind" };
+            int count = 0, pos = 0, temp = 0, countRepeat = 0, question, guessNum, correctNum = 0, qCount = 0;
+            bool exit = false, number = true, validGuess = false;
             Random rand = new Random();
             string guess;
 
-
-            do
+            if (playerGen)
             {
-                Console.Clear();
-                count = 0;
-                foreach (int i in prizes)
+                do
                 {
-                    if (count == pos)
+                    Console.Clear();
+                    count = 0;
+                    foreach (int i in prizes)
                     {
-                        Console.ForegroundColor = ConsoleColor.Red;
-                    }
-
-                    Console.Write("$" + i + "  ");
-
-                    if (count == pos)
-                    {
-                        Console.ForegroundColor = ConsoleColor.White;
-                    }
-
-                    count++;
-                }
-
-                Console.WriteLine("\nYou are playing as " + player.fName + " " + player.lName + "\n");
-                question = rand.Next(0, 9);
-
-                while (qArray[question].used != 0) //checks whether the question has already been used in the game, if so, find a new question
-                {
-                    question = rand.Next(0, 9);
-                }
-
-                Console.WriteLine(qArray[question].q);
-
-                for (int i = 0; i < numArray.Length; i++) //resets all values of numArray to 0
-                {
-                    numArray[i] = 0;
-                }
-
-                for (int i = 0; i < numArray.Length; i++) //Randomly shuffles questions and checks for repeats in answers. 
-                {
-                    countRepeat = 0;
-                    temp = rand.Next(4);
-                    foreach (int a in numArray)
-                    {
-                        if (temp + 1 == a)
+                        if (count == pos)
                         {
-                            countRepeat++;
+                            Console.ForegroundColor = ConsoleColor.Red;
+                        }
+
+                        Console.Write("$" + i + "  ");
+
+                        if (count == pos)
+                        {
+                            Console.ForegroundColor = ConsoleColor.White;
+                        }
+
+                        count++;
+                    }
+
+                    Console.WriteLine("\nYou are playing as " + player.fName + " " + player.lName + "\n");
+                    question = rand.Next(0, 32);
+
+                    Console.Write("Lifelines Avaliable: ");
+                    foreach (string i in lifeLines) // Prints all lifelines
+                    {
+                        Console.Write(i + ", ");
+                    }
+                    Console.WriteLine("\n"); //formatting
+
+                    while (qArray[question].used != 0) //checks whether the question has already been used in the game, if so, find a new question
+                    {
+                        question = rand.Next(0, 32);
+                    }
+
+                    Console.WriteLine(qArray[question].q);
+
+                    for (int i = 0; i < numArray.Length; i++) //resets all values of numArray to 0
+                    {
+                        numArray[i] = 0;
+                    }
+
+                    for (int i = 0; i < numArray.Length; i++) //Randomly shuffles questions and checks for repeats in answers. 
+                    {
+                        countRepeat = 0;
+                        temp = rand.Next(4);
+                        foreach (int a in numArray)
+                        {
+                            if (temp + 1 == a)
+                            {
+                                countRepeat++;
+                            }
+                        }
+
+                        if (countRepeat > 0)
+                        {
+                            i--;
+                        }
+                        else
+                        {
+                            numArray[i] = temp + 1;
+                        }
+                    }                                                                                                       // }
+
+                    count = 1; //resets the count variable
+                    foreach (int i in numArray)
+                    {
+                        Console.Write(count + ". ");
+                        switch (i)
+                        {
+                            case 1:
+                                Console.WriteLine(qArray[question].tAnswer);
+                                correctNum = count;
+                                break;
+                            case 2:
+                                Console.WriteLine(qArray[question].fAnswer1);
+                                break;
+                            case 3:
+                                Console.WriteLine(qArray[question].fAnswer2);
+                                break;
+                            case 4:
+                                Console.WriteLine(qArray[question].fAnswer3);
+                                break;
+                        }
+                        count++;
+                    }
+                    qArray[question].used = 1;
+
+                    //Allows the user to enter a guess and then check whether the guess is correct.
+                    while (!validGuess)
+                    {
+                        Console.Write("Answer > ");
+                        guess = Console.ReadLine();
+
+                        if (guess.Contains("50/50"))
+                        {
+                            Console.Write($"Answers:\n")
+                        }
+                        else if (guess.Contains("phone"))
+                        {
+                            Console.WriteLine("asdf");
+                            Console.ReadLine();
+                        }
+                        else if (guess.Contains("audience"))
+                        {
+
+                        }
+                        else
+                        {
+                            foreach (char i in guess)
+                            {
+                                if (i > '0' && i < '5' && number == true)
+                                {
+                                    number = true;
+                                }
+                                else
+                                {
+                                    number = false;
+                                }
+                            }
+                            guessNum = Convert.ToInt32(guess);
+
+                            Thread.Sleep(2000);
+                            if (correctNum == guessNum)
+                            {
+                                Console.WriteLine("\nCorrect!");
+                                qCount++;
+                                pos++;
+                                Thread.Sleep(2000);
+                            }
+                            else
+                            {
+                                Console.Write("\nIncorrect!\n\nGAME OVER\n\nPress Enter to return to the Menu \n\n> ");
+                                validGuess = false;
+                                Console.ReadLine();
+                                exit = true;
+                            }
+                            if (qCount == 15)
+                            {
+                                exit = true;
+                                Console.Clear();
+                                Console.Write($"Congratulations, {player.fName} won $1,000,000!!\nPress Enter to return to the Menu > ");
+                                validGuess = true;
+                                Console.ReadLine();
+                            }
                         }
                     }
-
-                    if (countRepeat > 0)
-                    {
-                        i--;
-                    }
-                    else
-                    {
-                        numArray[i] = temp + 1;
-                    }
-                }                                                                                                       // }
-
-                count = 1; //resets the count variable
-                foreach (int i in numArray)
-                {
-                    Console.Write(count + ". ");
-                    switch (i)
-                    {
-                        case 1:
-                            Console.WriteLine(qArray[question].tAnswer);
-                            correctNum = count;
-                            break;
-                        case 2:
-                            Console.WriteLine(qArray[question].fAnswer1);
-                            break;
-                        case 3:
-                            Console.WriteLine(qArray[question].fAnswer2);
-                            break;
-                        case 4:
-                            Console.WriteLine(qArray[question].fAnswer3);
-                            break;
-                    }
-                    count++;
-                }
-                qArray[question].used = 1;
-
-                //Allows the user to enter a guess and then check whether the guess is correct.
-
-                Console.Write("Answer >");
-                guess = Console.ReadLine();
-                foreach (char i in guess)
-                {
-                    if (i > '0' && i < '5' && number == true)
-                    {
-                        number = true;
-                    } else
-                    {
-                        number = false;
-                    }
-                }
-                guessNum = Convert.ToInt32(guess);
-
-                Thread.Sleep(2000);
-                if (correctNum == guessNum)
-                {
-                    Console.WriteLine("\nCorrect!");
-                    pos++;
-                }
-                else
-                {
-                    Console.WriteLine("\nIncorrect!");
-                    exit = true;
-                }
-                Thread.Sleep(2000);
-            } while (!exit);
+                } while (!exit);
+            } else
+            {
+                Console.Clear();
+                Console.Write("Please generate finalists and the player before starting the game.\n\nPress Enter to return to the Menu\n\n> ");
+                Console.ReadLine();
+            }
         }
     }
 }

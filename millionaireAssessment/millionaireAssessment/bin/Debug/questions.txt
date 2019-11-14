@@ -58,7 +58,7 @@ What does the roman numeral C represent?
 50
 75
 10
-Name the largest freshwater lake in the world?
+Which is the largest freshwater lake in the world?
 Lake Superior
 Lake Taupo
 Lake Baikal
@@ -148,7 +148,7 @@ Zebra
 Elephant
 Lion
 Chimpanzee
-What does the “E” stand for in the name of the American restaurant chain Chuck E. Cheese?
+What does the 'E' stand for in the name of the American restaurant chain Chuck E. Cheese?
 Entertainment
 Energetic
 Equal
