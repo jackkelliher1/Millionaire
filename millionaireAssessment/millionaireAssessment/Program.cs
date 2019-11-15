@@ -60,8 +60,12 @@ namespace millionaireAssessment
             sr1.Close();
             while (!exit) //Menu System
             {
+                for(int q = 0; q < 32; q++) //resets the used attribute
+                {
+                    questionList[q].used = 0;
+                }
                 Console.Clear();
-                Console.Write("Who Wants to Be a Millionaire\n\t1.Contestants\n\t2.Update Interests\n\t3.Generate Finalists\n\t4.Select Player\n\t5.Play\n\nEnter the relevent number:");
+                Console.Write("Who Wants to Be a Millionaire - Jack Kelliher\n\t1.Contestants\n\t2.Update Interests\n\t3.Generate Finalists\n\t4.Select Player\n\t5.Play\n\nEnter the relevent number: ");
                 numString = Console.ReadLine();
                 foreach (char i in numString)
                 {
@@ -133,7 +137,7 @@ namespace millionaireAssessment
             string chkString;
             while (!exit) //repeats the loop until the user wants to return to menu
             {
-                number = false;
+                number = true;
                 Method1(array); //Lists all students
                 Console.Write("Enter the Number of the student you want to update: ");
                 chkString = Console.ReadLine(); //holds the input value in order to check validity
@@ -148,22 +152,30 @@ namespace millionaireAssessment
                         number = false;
                     }
                 }
-                if (number == true) //if the foreach loop validated the string as a number
+                if (chkString != "")
                 {
-                    temp = Convert.ToInt32(chkString); //converts string input into integer
-                    if (temp <= array.Length) //Makes sure temp is not greater than the student array
+                    if (number == true) //if the foreach loop validated the string as a number
                     {
-                        Console.Write($"Enter {array[temp - 1].fName}'s new interest: "); //Finds the name for the selected number
-                        array[temp - 1].interest = Console.ReadLine(); //enters input into interst feild of selected student
-                        Console.WriteLine("Change successful");
+                        temp = Convert.ToInt32(chkString); //converts string input into integer
+                        if (temp <= array.Length) //Makes sure temp is not greater than the student array
+                        {
+                            Console.Write($"Enter {array[temp - 1].fName}'s new interest: "); //Finds the name for the selected number
+                            array[temp - 1].interest = Console.ReadLine(); //enters input into interst feild of selected student
+                            Console.WriteLine("Change successful");
+                        }
+                        else //if temp is larger than the array length
+                        {
+                            Console.WriteLine("Invalid Number");
+                            Console.WriteLine("Change unsuccessful");
+                        }
                     }
-                    else //if temp is larger than the array length
+                    else //if the string was not validated as an integer
                     {
                         Console.WriteLine("Invalid Number");
-                        Console.WriteLine("Change unsuccessful");
+                        Console.WriteLine("Change Unsuccessful");
                     }
                 }
-                else //if the string was not validated as an integer
+                else //if the string was validated as empty
                 {
                     Console.WriteLine("Invalid Number");
                     Console.WriteLine("Change Unsuccessful");
@@ -234,11 +246,11 @@ namespace millionaireAssessment
             int[] prizes = { 100, 200, 300, 500, 1000, 2000, 4000, 8000, 16000, 32000, 64000, 125000, 250000, 500000, 1000000 }; //amount of winnings per question
             int[] qShuffle = new int[4]; //shuffles all questions
             int[] numArray = { 0, 0, 0, 0 };
-            string[] lifeLines = { "50/50", "Ask the Audience", "Phone a Freind" };
-            int count = 0, pos = 0, temp = 0, countRepeat = 0, question, guessNum, correctNum = 0, qCount = 0;
+            string[] lifeLines = { "50/50,", "Ask the Audience,", "Phone a Freind" };
+            int count = 0, pos = 0, temp = 0, audiencePoll, countRepeat = 0, question, guessNum, correctNum = 0, qCount = 0, audienceTotal;
             bool exit = false, number = true, validGuess = false;
             Random rand = new Random();
-            string guess;
+            string guess, wAnswer = "";
 
             if (playerGen)
             {
@@ -269,7 +281,7 @@ namespace millionaireAssessment
                     Console.Write("Lifelines Avaliable: ");
                     foreach (string i in lifeLines) // Prints all lifelines
                     {
-                        Console.Write(i + ", ");
+                        Console.Write(i + " ");
                     }
                     Console.WriteLine("\n"); //formatting
 
@@ -332,23 +344,65 @@ namespace millionaireAssessment
                     qArray[question].used = 1;
 
                     //Allows the user to enter a guess and then check whether the guess is correct.
+                    validGuess = false;
                     while (!validGuess)
                     {
+                        number = true; //resets the bool
                         Console.Write("Answer > ");
                         guess = Console.ReadLine();
 
-                        if (guess.Contains("50/50"))
+                        if (guess.Contains("50/50") && lifeLines[0].CompareTo("") != 0) //checks if the user has used the 50/50 lifeline and wheather it is avaliable
                         {
-                            Console.Write($"Answers:\n")
+                            Console.WriteLine("\nRemoving fifty percent of answers...\n");
+                            Thread.Sleep(2000);
+                            Console.Write($"The answer is either:\n\n");
+                            temp = rand.Next(1, 4);
+                            switch(temp)
+                            {
+                                case 1:
+                                    wAnswer = qArray[question].fAnswer1;
+                                    break;
+                                case 2:
+                                    wAnswer = qArray[question].fAnswer2;
+                                    break;
+                                case 3:
+                                    wAnswer = qArray[question].fAnswer3;
+                                    break;
+                            }
+                            temp = rand.Next(0, 2);
+                            if (temp == 0)
+                            {
+                                Console.Write("\t" + qArray[question].tAnswer + "\n\t OR \n\t" + wAnswer + "\n\n");
+                            } else
+                            {
+                                Console.Write("\t" + wAnswer + "\n\t OR \n\t" + qArray[question].tAnswer + "\n\n");
+                            }
+                            lifeLines[0] = "";
                         }
-                        else if (guess.Contains("phone"))
+                        else if (guess.Contains("phone") && lifeLines[2].CompareTo("") != 0)
                         {
-                            Console.WriteLine("asdf");
-                            Console.ReadLine();
+                            Console.WriteLine("\nDialing friend...");
+                            Thread.Sleep(2000);
+                            Console.WriteLine($"\nHello {player.fName} I would guess the correct answer is {qArray[question].tAnswer}?\n");
+                            lifeLines[2] = "";
                         }
-                        else if (guess.Contains("audience"))
+                        else if (guess.Contains("audience") && lifeLines[1].CompareTo("") != 0)
                         {
+                            Console.WriteLine("\nAudience Results: \n");
+                            audienceTotal = rand.Next(50, 101);
+                            Console.WriteLine($"{qArray[question].tAnswer}:".PadRight(20) + $"{audienceTotal}%");
 
+                            audiencePoll = rand.Next(0, 100 - audienceTotal);
+                            audienceTotal += audiencePoll;
+                            Console.WriteLine($"{qArray[question].fAnswer1}:".PadRight(20) + $"{audiencePoll}%");
+
+                            audiencePoll = rand.Next(0, 100 - audienceTotal);
+                            audienceTotal += audiencePoll;
+                            Console.WriteLine($"{qArray[question].fAnswer2}:".PadRight(20) + $"{audiencePoll}% ");
+
+                            audiencePoll = 100 - audienceTotal;
+                            Console.WriteLine($"{qArray[question].fAnswer3}:".PadRight(20) + $"{audiencePoll}%\n");
+                            lifeLines[1] = "";
                         }
                         else
                         {
@@ -363,30 +417,36 @@ namespace millionaireAssessment
                                     number = false;
                                 }
                             }
-                            guessNum = Convert.ToInt32(guess);
+                            if (number && guess != "")
+                            {
+                                guessNum = Convert.ToInt32(guess);
 
-                            Thread.Sleep(2000);
-                            if (correctNum == guessNum)
-                            {
-                                Console.WriteLine("\nCorrect!");
-                                qCount++;
-                                pos++;
                                 Thread.Sleep(2000);
-                            }
-                            else
+                                if (correctNum == guessNum)
+                                {
+                                    Console.WriteLine("\nCorrect!");
+                                    validGuess = true;
+                                    qCount++;
+                                    pos++;
+                                    Thread.Sleep(2000);
+                                }
+                                else
+                                {
+                                    Console.Write("\nIncorrect!\n\nGAME OVER\n\nPress Enter to return to the Menu \n\n> ");
+                                    validGuess = true;
+                                    Console.ReadLine();
+                                    exit = true;
+                                }
+                                if (qCount == 15)
+                                {
+                                    exit = true;
+                                    Console.Clear();
+                                    Console.Write($"Congratulations, {player.fName} won $1,000,000!!\nPress Enter to return to the Menu > ");
+                                    Console.ReadLine();
+                                }
+                            } else
                             {
-                                Console.Write("\nIncorrect!\n\nGAME OVER\n\nPress Enter to return to the Menu \n\n> ");
-                                validGuess = false;
-                                Console.ReadLine();
-                                exit = true;
-                            }
-                            if (qCount == 15)
-                            {
-                                exit = true;
-                                Console.Clear();
-                                Console.Write($"Congratulations, {player.fName} won $1,000,000!!\nPress Enter to return to the Menu > ");
-                                validGuess = true;
-                                Console.ReadLine();
+                                Console.WriteLine("\nEnter a valid number.\n");
                             }
                         }
                     }
