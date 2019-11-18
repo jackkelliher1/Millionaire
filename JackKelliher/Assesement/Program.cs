@@ -47,7 +47,7 @@ namespace millionaireAssessment
             sr.Close();
             count = 0;
             StreamReader sr1 = new StreamReader(@"questions.txt");
-            while (!sr1.EndOfStream)
+            while (!sr1.EndOfStream) //fills question Array
             {
                 questionList[count].q = sr1.ReadLine();
                 questionList[count].tAnswer = sr1.ReadLine();
@@ -67,7 +67,7 @@ namespace millionaireAssessment
                 Console.Clear();
                 Console.Write("Who Wants to Be a Millionaire - Jack Kelliher\n\t1.Contestants\n\t2.Update Interests\n\t3.Generate Finalists\n\t4.Select Player\n\t5.Play\n\nEnter the relevent number: ");
                 numString = Console.ReadLine();
-                foreach (char i in numString)
+                foreach (char i in numString) //switch to send the user to the correct method depending on their input
                 {
                     if (i > '0' && i < '6')
                     {
@@ -76,22 +76,22 @@ namespace millionaireAssessment
 
                         switch (num)
                         {
-                            case 1:
+                            case 1: //Lists all contestants
                                 Method1(studentArray);
                                 Console.ReadLine();
                                 break;
-                            case 2:
+                            case 2: // Allows intrests to be updated
                                 Method2(studentArray);
                                 break;
-                            case 3:
+                            case 3: // Generates finalists
                                 Method3(studentArray, finalists, ref finalistsGen);
                                 Console.ReadLine();
                                 break;
-                            case 4:
+                            case 4: //generates player
                                 Method4(finalists, ref player, ref finalistsGen, ref playerGen);
                                 Console.ReadLine();
                                 break;
-                            case 5:
+                            case 5: // Plays game
                                 Method5(questionList, player, ref playerGen);
                                 break;
                         }
@@ -129,7 +129,7 @@ namespace millionaireAssessment
             }
         }
 
-        //Update a students interest feild. Complete
+        //Update a students interest feild. 
         static void Method2(Student[] array)
         {
             bool exit = false, number = true;
@@ -137,7 +137,7 @@ namespace millionaireAssessment
             string chkString;
             while (!exit) //repeats the loop until the user wants to return to menu
             {
-                number = true;
+                number = true; // variable to confirm user has entered a number instead of a char or string
                 Method1(array); //Lists all students
                 Console.Write("Enter the Number of the student you want to update: ");
                 chkString = Console.ReadLine(); //holds the input value in order to check validity
@@ -152,7 +152,7 @@ namespace millionaireAssessment
                         number = false;
                     }
                 }
-                if (chkString != "")
+                if (chkString != "") // confims the entry is not empty
                 {
                     if (number == true) //if the foreach loop validated the string as a number
                     {
@@ -224,7 +224,7 @@ namespace millionaireAssessment
 
         static void Method4(Student[] finalists, ref Student player, ref bool finalistsGen, ref bool playerGen) //Randomly select a student to be the player
         {
-            if (finalistsGen)
+            if (finalistsGen) //makes sure the finalists are generated before a player is generated
             {
                 playerGen = true;
                 Random rand = new Random();
@@ -237,7 +237,7 @@ namespace millionaireAssessment
             } else
             {
                 Console.Clear();
-                Console.Write("Please generate finalists before you select a player.\n\nPress Enter to return to the Menu.\n\n> ");
+                Console.Write("Please generate finalists before you generate a player.\n\nPress Enter to return to the Menu.\n\n> ");
             }
         }
 
@@ -252,15 +252,15 @@ namespace millionaireAssessment
             Random rand = new Random();
             string guess, wAnswer = "";
 
-            if (playerGen)
+            if (playerGen) // if finalists and player have been generated
             {
                 do
                 {
                     Console.Clear();
                     count = 0;
-                    foreach (int i in prizes)
+                    foreach (int i in prizes) // Prints all prizes to screen
                     {
-                        if (count == pos)
+                        if (count == pos) // Changes the color of the current prize to red
                         {
                             Console.ForegroundColor = ConsoleColor.Red;
                         }
@@ -276,7 +276,7 @@ namespace millionaireAssessment
                     }
 
                     Console.WriteLine("\nYou are playing as " + player.fName + " " + player.lName + "\n");
-                    question = rand.Next(0, 32);
+                    question = rand.Next(0, 32); // generates a random question
 
                     Console.Write("Lifelines Avaliable: ");
                     foreach (string i in lifeLines) // Prints all lifelines
@@ -322,12 +322,12 @@ namespace millionaireAssessment
                     count = 1; //resets the count variable
                     foreach (int i in numArray)
                     {
-                        Console.Write(count + ". ");
+                        Console.Write(count + ". "); //Writes the answers to the screen
                         switch (i)
                         {
                             case 1:
                                 Console.WriteLine(qArray[question].tAnswer);
-                                correctNum = count;
+                                correctNum = count; //stores the correct number to enter for the correct answer
                                 break;
                             case 2:
                                 Console.WriteLine(qArray[question].fAnswer1);
@@ -341,7 +341,7 @@ namespace millionaireAssessment
                         }
                         count++;
                     }
-                    qArray[question].used = 1;
+                    qArray[question].used = 1; 
 
                     //Allows the user to enter a guess and then check whether the guess is correct.
                     validGuess = false;
@@ -351,6 +351,7 @@ namespace millionaireAssessment
                         Console.Write("Answer > ");
                         guess = Console.ReadLine();
 
+                        // Inputs for lifelines
                         if (guess.Contains("50/50") && lifeLines[0].CompareTo("") != 0) //checks if the user has used the 50/50 lifeline and wheather it is avaliable
                         {
                             Console.WriteLine("\nRemoving fifty percent of answers...\n");
@@ -404,7 +405,7 @@ namespace millionaireAssessment
                             Console.WriteLine($"{qArray[question].fAnswer3}:".PadRight(20) + $"{audiencePoll}%\n");
                             lifeLines[1] = "";
                         }
-                        else
+                        else // code for number input when no lifelines are inputted
                         {
                             foreach (char i in guess)
                             {
@@ -417,12 +418,12 @@ namespace millionaireAssessment
                                     number = false;
                                 }
                             }
-                            if (number && guess != "")
+                            if (number && guess != "") //checks if the input is a number and also not empty
                             {
                                 guessNum = Convert.ToInt32(guess);
 
                                 Thread.Sleep(2000);
-                                if (correctNum == guessNum)
+                                if (correctNum == guessNum) //Correct input
                                 {
                                     Console.WriteLine("\nCorrect!");
                                     validGuess = true;
@@ -430,14 +431,14 @@ namespace millionaireAssessment
                                     pos++;
                                     Thread.Sleep(2000);
                                 }
-                                else
+                                else // Incorrect Input, returns user to menu
                                 {
                                     Console.Write("\nIncorrect!\n\nGAME OVER\n\nPress Enter to return to the Menu \n\n> ");
                                     validGuess = true;
                                     Console.ReadLine();
                                     exit = true;
                                 }
-                                if (qCount == 15)
+                                if (qCount == 15) // if all questions are answered
                                 {
                                     exit = true;
                                     Console.Clear();
